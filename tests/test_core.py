@@ -216,7 +216,7 @@ def test_051_push(
 
 
 def test_061_finish(
-    data_dir: pathlib.Path, cooked_repo: pygit2.Repository, repo_1_path: pathlib.Path
+    data_dir: pathlib.Path, cooked_repo: pygit2.Repository, repo_1_path: pathlib.Path,
 ) -> None:
     finish_message = "Implemented feature in `branch-1`"
     core.start(branch_name='branch-1')
