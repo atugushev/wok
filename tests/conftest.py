@@ -83,11 +83,21 @@ def tmp_cwd(tmp_path: pathlib.Path) -> typing.Iterator[pathlib.Path]:
 
 
 @pytest.fixture()
-def empty_repo(tmp_cwd: pathlib.Path) -> pygit2.Repository:
-    repo = pygit2.init_repository(str(pathlib.Path.cwd()))
-    repo.config["user.name"] = "Wok Wok"
-    repo.config["user.email"] = "wok@countzero.co"
-    return repo
+def create_repo() -> pygit2.Repository:
+    def inner(path: pathlib.Path):
+        repo = pygit2.init_repository(str(path))
+        repo.config["user.name"] = "Wok Wok"
+        repo.config["user.email"] = "wok@countzero.co"
+        return repo
+
+    return inner
+
+
+@pytest.fixture()
+def empty_repo(
+    tmp_cwd: pathlib.Path, create_repo: typing.Callable
+) -> pygit2.Repository:
+    return create_repo(pathlib.Path.cwd())
 
 
 @pytest.fixture()
