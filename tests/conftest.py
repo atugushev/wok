@@ -134,23 +134,25 @@ def cooked_repo(
 
 @pytest.fixture()
 def tmp_repos(
+    tmpdir: pathlib.Path,
     repo_1_url: str,
     repo_1_path: pathlib.Path,
     repo_2_url: str,
     repo_2_path: pathlib.Path,
     cooked_repo: pygit2.Repository,
     repo_w_url: str,
+    create_repo: typing.Callable,
 ) -> typing.Iterator[typing.Iterable[pygit2.Repository]]:
     repos = (
-        pygit2.Repository(str(repo_1_path)),
-        pygit2.Repository(str(repo_2_path)),
+        create_repo(repo_1_path),
+        create_repo(repo_2_path),
         cooked_repo,
     )
     repo_urls = (repo_1_url, repo_2_url, repo_w_url)
 
     for n, repo in enumerate(repos):
         repo_url = repo_urls[n]
-        repo_tmp_url = f'{repo_url}-tmp'
+        repo_tmp_url = str(tmpdir / repo_url)
         shutil.copytree(src=repo_url, dst=repo_tmp_url)
         repo.remotes.set_url(name='origin', url=repo_tmp_url)
 
