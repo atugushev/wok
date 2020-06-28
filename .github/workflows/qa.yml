@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  qa:
+  pre-commit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
